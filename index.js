@@ -11,19 +11,29 @@ const NEWS_API_URL = process.env.NEWS_API_URL;
 const NEWS_API_KEY = process.env.NEWS_API_KEY;
 const NEWS_URL = `${NEWS_API_URL}/everything?apiKey=${NEWS_API_KEY}`;
 
+const FREECURRENCYEXCHANGE_API_URL = process.env.FREECURRENCYEXCHANGE_API_URL;
+const FREECURRENCYEXCHANGE_API_KEY = process.env.FREECURRENCYEXCHANGE_API_KEY;
+const FREECURRENCYEXCHANGE = `${FREECURRENCYEXCHANGE_API_URL}?apikey=${FREECURRENCYEXCHANGE_API_KEY}`;
+
+const GNEWS_API_URL = process.env.GNEWS_API_URL;
+const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
+const GNEWS = `${GNEWS_API_URL}/?apikey=${GNEWS_API_KEY}`;
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "html/index.html"));
 });
 
-app.get("/newsapi", async (req, res) => {
-  const rawInfo = await fetch(NEWS_URL);
+app.get("/noticias/:categoria", async (req, res) => {
+  const categoria = req.params.categoria;
+
+  const rawInfo = await fetch(`${NEWS_URL}&languaje=es&q=${categoria}`);
   const news = await rawInfo.json();
   res.json(news);
 });
 
-app.get("/nasaPicture", async (req, res) => {
+app.get("/imagen", async (req, res) => {
   /*
     {
         "copyright": "Christophe Vergnes",
@@ -47,6 +57,10 @@ app.get("/nasaPicture", async (req, res) => {
     url,
     hdurl,
   });
+});
+
+app.get("/clima/:lat/:long", (req, res) => {
+  res.send("ME HAZOOOOO");
 });
 
 app.listen(PORT, () =>
