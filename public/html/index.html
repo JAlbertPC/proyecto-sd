@@ -8,24 +8,49 @@
   </head>
   <body>
     <div class="container">
-      <h1>UADY NOTICIAS</h1>
-      <header>
-        <nav>
-          <span class="cat" onclick="buscar('tecnologia')">Tecnología </span>
-          <span class="cat" onclick="buscar('programación')"
-            >Programación
-          </span>
-          <span class="cat" onclick="buscar('deportes')">Deportes</span>
-          <span class="cat" onclick="buscar('economía')">Economía </span>
-          <span class="cat" onclick="buscar('educación')">Educación </span>
-        </nav>
-        <div class="busqueda">
-          <input type="text" placeholder="¿Qué desea buscar?" id="busqueda" />
-          <button onclick="buscarTema()">Buscar</button>
-        </div>
-      </header>
+      <div class="title">
+        <div id="container">
+          <div id="containerClima1">
+            <h1 id="temperatura-valor"></h1>
+            <h1 id="temperatura-descripcion"></h1>
+          </div>
 
-      <div class="container-noticias"></div>
+          <div id="containerClima2">
+            <h2 id="ubicacion"></h2>
+            <img id="icono-animado" src="" alt="" height="128" width="128" />
+          </div>
+
+          <div id="containerClima3">
+            <h3>Veloc. del viento</h3>
+            <h1 id="viento-velocidad"></h1>
+          </div>
+        </div>
+        <h1>UADY NOTICIAS</h1>
+      </div>
+      <div id="imagen" class="imagen">
+        <!-- <div class="informacion"></div> -->
+      </div>
+      <div class="noticias">
+        <header>
+          <nav>
+            <span class="cat">Enfemerides</span>
+
+            <span class="cat" onclick="buscar('tecnologia')">Tecnología </span>
+            <span class="cat" onclick="buscar('programación')"
+              >Programación
+            </span>
+            <span class="cat" onclick="buscar('deportes')">Deportes</span>
+            <span class="cat" onclick="buscar('economía')">Economía </span>
+            <span class="cat" onclick="buscar('educación')">Educación </span>
+          </nav>
+          <div class="busqueda">
+            <input type="text" placeholder="¿Qué desea buscar?" id="busqueda" />
+            <button onclick="buscarTema()">Buscar</button>
+          </div>
+        </header>
+
+        <div class="container-noticias"></div>
+      </div>
     </div>
 
     <script src="js/app.js"></script>
