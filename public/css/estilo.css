@@ -17,7 +17,7 @@ body {
     /* margin: auto; */
 }
 
-.title {
+.header {
     position: sticky;
     top: 0;
     background-color: white;
@@ -27,7 +27,11 @@ body {
     width: 98%;
 }
 
-.title > h1 {
+.navbar {
+    position: relative;
+}
+
+.navbar > h1 {
     margin: 1rem;
 }
 
@@ -68,7 +72,7 @@ body {
 h1{
     text-align: center;
     color: black;
-    font-size: 60px; 
+    font-size: 60px;
 }
 
 .noticias {
@@ -79,7 +83,7 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 20px; 
+    font-size: 20px;
     position: sticky;
     top: 6.9rem;
     background-color: white;
@@ -157,7 +161,7 @@ header button{
     padding: 10px;                 /* Relleno dentro del contenedor */
     background-color: beige;     /* Color de fondo */
     border: 1px solid #ccc;        /* Borde */
-    border-radius: 5px; 
+    border-radius: 5px;
     justify-content: space-between;           /* Bordes redondeados */
 }
 
@@ -181,4 +185,111 @@ header button{
 .busqueda button:hover {
     color: beige;
     background-color: steelblue;     /* Color de fondo del botón al pasar el ratón */
+}
+
+.seccion-clima {
+    /* width: 60%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background: #009FFF;  */ /* fallback for old browsers */
+    /* background: -webkit-linear-gradient(to right, #ec2F4B, #009FFF); */ /* Chrome 10-25, Safari 5.1-6 */
+    /*  background: linear-gradient(to right, #ec2F4B, #009FFF); */ /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    /*
+        position: absolute;
+        left: 0;
+        height: 5rem; */
+
+    /*width: 20%;*/
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    left: 0;
+}
+
+#clima {
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    /* grid-gap: 10px; */
+    align-items: center;
+    height: 100%;
+}
+
+#div-temperatura, #div-ubicacion, #div-viento {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    vertical-align: middle;
+    width: 11rem;
+    height: 100%;
+}
+
+#div-temperatura {
+    background-color: cornflowerblue;
+    color: white;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+}
+
+#div-ubicacion {
+    background-color: palevioletred;
+    color: white;
+}
+
+#div-viento {
+    background-color: plum;
+    color: white;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+#div-temperatura > p {
+    margin: 0;
+}
+
+#div-ubicacion > h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+#div-viento > p {
+    margin: 0;
+}
+
+#div-viento > h3 {
+    font-size: 1rem;
+    margin: 0;
+}
+
+#div-ubicacion > img {
+    height: 1rem;
+}
+
+.seccion-divisa {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: forestgreen;
+    width: 10rem;
+    border-radius: 1rem;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.peso, .dolar {
+    display: flex;
+    flex-direction: row;
 }

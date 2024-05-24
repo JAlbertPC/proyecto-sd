@@ -136,7 +136,7 @@ window.addEventListener("load", () => {
       lat = posicion.coords.latitude;
 
       //ubicacion actual
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=es&units=metric&appid=`;
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=es&units=metric&appid=95bef9bb448ce3cea02ada399cc278e8`;
 
       //ubicacion por ciudad
       //const url = "https://api.openweathermap.org/data/2.5/weather?q=Merida,mx&callback=test&appid=95bef9bb448ce3cea02ada399cc278e8"
@@ -162,45 +162,45 @@ window.addEventListener("load", () => {
 
           //iconos estaticos
           /*
-                console.log(data.weather[0].icon)
-                let iconCode = data.weather[0].icon
-                const urlIcon = `https://openweathermap.org/img/wn/${iconCode}.png`
-                console.log(urlIcon)
-                */
+                          console.log(data.weather[0].icon)
+                          let iconCode = data.weather[0].icon
+                          const urlIcon = `https://openweathermap.org/img/wn/${iconCode}.png`
+                          console.log(urlIcon)
+                          */
 
           //para iconos dinámicos
           console.log(data.weather[0].main);
           switch (data.weather[0].main) {
             case "Thunderstorm":
-              iconoAnimado.src = "/animated/thunder.svg";
+              iconoAnimado.src = "images/animated/thunder.svg";
               console.log("TORMENTA");
               break;
             case "Drizzle":
-              iconoAnimado.src = "/animated/rainy-2.svg";
+              iconoAnimado.src = "images/animated/rainy-2.svg";
               console.log("LLOVIZNA");
               break;
             case "Rain":
-              iconoAnimado.src = "/animated/rainy-7.svg";
+              iconoAnimado.src = "images/animated/rainy-7.svg";
               console.log("LLUVIA");
               break;
             case "Snow":
-              iconoAnimado.src = "/animated/snowy-6.svg";
+              iconoAnimado.src = "images/animated/snowy-6.svg";
               console.log("NIEVE");
               break;
             case "Clear":
-              iconoAnimado.src = "/animated/day.svg";
+              iconoAnimado.src = "images/animated/day.svg";
               console.log("LIMPIO");
               break;
             case "Atmosphere":
-              iconoAnimado.src = "/animated/weather.svg";
+              iconoAnimado.src = "images/animated/weather.svg";
               console.log("ATMOSFERA");
               break;
             case "Clouds":
-              iconoAnimado.src = "/animated/cloudy-day-1.svg";
+              iconoAnimado.src = "images/animated/cloudy-day-1.svg";
               console.log("NUBES");
               break;
             default:
-              iconoAnimado.src = "/animated/cloudy-day-1.svg";
+              iconoAnimado.src = "images/animated/cloudy-day-1.svg";
               console.log("por defecto");
           }
         })

@@ -2,32 +2,46 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/estilo.css" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="css/estilo.css" rel="stylesheet" />
     <title>Uady Noticias</title>
   </head>
   <body>
     <div class="container">
-      <div class="title">
-        <div id="container">
-          <div id="containerClima1">
-            <h1 id="temperatura-valor"></h1>
-            <h1 id="temperatura-descripcion"></h1>
-          </div>
+      <div class="header">
+        <div class="navbar">
+          <div class="seccion-clima">
+            <div id="clima">
+              <div id="div-temperatura">
+                <p id="temperatura-valor"></p>
+                <p id="temperatura-descripcion"></p>
+              </div>
 
-          <div id="containerClima2">
-            <h2 id="ubicacion"></h2>
-            <img id="icono-animado" src="" alt="" height="128" width="128" />
-          </div>
+              <div id="div-ubicacion">
+                <img alt="" id="icono-animado" src="" />
+                <h3 id="ubicacion"></h3>
+              </div>
 
-          <div id="containerClima3">
-            <h3>Veloc. del viento</h3>
-            <h1 id="viento-velocidad"></h1>
+              <div id="div-viento">
+                <p id="viento-velocidad"></p>
+                <h3>Veloc. del viento</h3>
+              </div>
+            </div>
+          </div>
+          <h1>UADY NOTICIAS</h1>
+          <div class="seccion-divisa">
+            <div class="peso">
+              <p>MXN</p>
+              <p id="valor-peso">$17</p>
+            </div>
+            <div class="dolar">
+              <p>USD</p>
+              <p id="valor-dolar">$1</p>
+            </div>
           </div>
         </div>
-        <h1>UADY NOTICIAS</h1>
       </div>
-      <div id="imagen" class="imagen">
+      <div class="imagen" id="imagen">
         <!-- <div class="informacion"></div> -->
       </div>
       <div class="noticias">
@@ -44,7 +58,7 @@
             <span class="cat" onclick="buscar('educación')">Educación </span>
           </nav>
           <div class="busqueda">
-            <input type="text" placeholder="¿Qué desea buscar?" id="busqueda" />
+            <input id="busqueda" placeholder="¿Qué desea buscar?" type="text" />
             <button onclick="buscarTema()">Buscar</button>
           </div>
         </header>
