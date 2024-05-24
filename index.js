@@ -19,6 +19,10 @@ const GNEWS_API_URL = process.env.GNEWS_API_URL;
 const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
 const GNEWS = `${GNEWS_API_URL}/?apikey=${GNEWS_API_KEY}`;
 
+const OPENWEATHERMAP_API_URL = process.env.OPENWEATHERMAP_API_URL
+const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY
+const OPENWEATHERMAP_URL = `${OPENWEATHERMAP_API_URL}/weather?lang=es&units=metric&appid=${OPENWEATHERMAP_API_KEY}`
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
@@ -46,6 +50,7 @@ app.get("/imagen", async (req, res) => {
           "url": "https://apod.nasa.gov/apod/image/2405/N3169N3166Final1024.jpg"
       }
       */
+     
   const rawInfo = await fetch(NASA_URL);
   const { copyright, date, explanation, hdurl, title, url } =
     await rawInfo.json();
@@ -59,8 +64,11 @@ app.get("/imagen", async (req, res) => {
   });
 });
 
-app.get("/clima/:lat/:long", (req, res) => {
-  res.send("ME HAZOOOOO");
+app.get("/clima/:lat/:long", async (req, res) => {
+  const {lat, long} = req.params
+  const rawInfo = await fetch(`${OPENWEATHERMAP_URL}&lat=${lat}&lon=${long}`)
+  const clima =  await rawInfo.json();
+  res.json(clima);
 });
 
 app.listen(PORT, () =>

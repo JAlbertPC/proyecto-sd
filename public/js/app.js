@@ -134,20 +134,12 @@ window.addEventListener("load", () => {
       console.log(posicion);
       lon = posicion.coords.longitude;
       lat = posicion.coords.latitude;
-
-      //ubicacion actual
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&lang=es&units=metric&appid=95bef9bb448ce3cea02ada399cc278e8`;
-
-      //ubicacion por ciudad
-      //const url = "https://api.openweathermap.org/data/2.5/weather?q=Merida,mx&callback=test&appid=95bef9bb448ce3cea02ada399cc278e8"
-
-      //console.log(url)
-      fetch(url)
+    
+      fetch(`http://localhost:300/clima/${lat}/${lon}`)
         .then((response) => {
           return response.json();
         })
         .then((data) => {
-          console.log(data);
 
           let temp = Math.round(data.main.temp);
           temperaturaValor.textContent = `${temp} °C`;
@@ -158,7 +150,6 @@ window.addEventListener("load", () => {
           ubicacion.textContent = data.name;
 
           vientoVelocidad.textContent = `${data.wind.speed} m/s`;
-          console.log(data.name);
 
           //iconos estaticos
           /*
@@ -169,7 +160,6 @@ window.addEventListener("load", () => {
                           */
 
           //para iconos dinámicos
-          console.log(data.weather[0].main);
           switch (data.weather[0].main) {
             case "Thunderstorm":
               iconoAnimado.src = "images/animated/thunder.svg";
