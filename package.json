@@ -1,0 +1,26 @@
+{
+  "name": "proyecto-sd",
+  "version": "1.0.0",
+  "description": "\"Proyecyo sistemas distribuidos.\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js",
+    "dev": "nodemon --env-file=.env index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JAlbertPC/proyecto-sd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JAlbertPC/proyecto-sd/issues"
+  },
+  "homepage": "https://github.com/JAlbertPC/proyecto-sd#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0",
+    "sequelize": "^6.37.3",
+    "sqlite3": "^5.1.7"
+  }
+}
