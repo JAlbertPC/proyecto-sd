@@ -1,5 +1,14 @@
-const express = require("express");
-const path = require("path");
+import express from "express";
+import path from "path";
+import cookieParser from 'cookie-parser';
+
+import {fileURLToPath} from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+import {methods as authentication} from "./controllers/authentication.controller.js"
+import {methods as authorization} from "./middlewares/authorization.js";
+import {consultaEfemerides} from "./scrapper.js";
+
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -19,92 +28,118 @@ const GNEWS_API_URL = process.env.GNEWS_API_URL;
 const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
 const GNEWS_URL = `${GNEWS_API_URL}/search?apikey=${GNEWS_API_KEY}`;
 
-const OPENWEATHERMAP_API_URL = process.env.OPENWEATHERMAP_API_URL
-const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY
-const OPENWEATHERMAP_URL = `${OPENWEATHERMAP_API_URL}/weather?lang=es&units=metric&appid=${OPENWEATHERMAP_API_KEY}`
+const OPENWEATHERMAP_API_URL = process.env.OPENWEATHERMAP_API_URL;
+const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY;
+const OPENWEATHERMAP_URL = `${OPENWEATHERMAP_API_URL}/weather?lang=es&units=metric&appid=${OPENWEATHERMAP_API_KEY}`;
 
-const HOLIDAY_API_URL  = process.env.HOLIDAY_API_URL
-const HOLIDAY_API_KEY = process.env.HOLIDAY_API_KEY
-const HOLIDAY_URL = `${HOLIDAY_API_URL}`
+const HOLIDAY_API_URL = process.env.HOLIDAY_API_URL;
+const HOLIDAY_API_KEY = process.env.HOLIDAY_API_KEY;
+const HOLIDAY_URL = `${HOLIDAY_API_URL}`;
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+app.use(cookieParser())
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "html/index.html"));
+app.get("/", authorization.soloPublico, (req, res) =>
+    res.sendFile(__dirname + "/public/html/login.html")
+);
+app.get("/register", authorization.soloPublico, (req, res) =>
+    res.sendFile(__dirname + "/public/html/register.html")
+);
+app.get("/home", authorization.soloAdmin, (req, res) =>
+    res.sendFile(__dirname + "/public/html/index.html")
+);
+app.post("/api/login", authentication.login);
+app.post("/api/register", authentication.register);
+
+/*app.get("/home", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "html/index.html"));
+});*/
+
+app.get("/noticias/:categoria",authorization.soloAdmin, async (req, res) => {
+    const categoria = req.params.categoria;
+
+    const rawInfoNews = await fetch(`${NEWS_URL}&languaje=es&q=${categoria}`);
+    const newsNews = await rawInfoNews.json();
+
+    const rawInfoGNews = await fetch(`${GNEWS_URL}&lan=es&q=${categoria}`);
+    const newsGNews = await rawInfoGNews.json();
+
+    const noticias = {noticias: []};
+
+    for (const newNew of newsNews.articles) {
+        const {title, url, urlToImage, publishedAt} = newNew;
+        const name = newNew.source.name;
+        noticias.noticias.push({
+            title: title,
+            url: url,
+            image: urlToImage,
+            publishedAt: publishedAt,
+            name: name,
+        });
+    }
+
+    for (const newGNew of newsGNews.articles) {
+        const {title, url, image, publishedAt} = newGNew;
+        const name = newGNew.source.name;
+        noticias.noticias.push({
+            title: title,
+            url: url,
+            image: image,
+            publishedAt: publishedAt,
+            name: name,
+        });
+    }
+
+    res.json(noticias);
 });
 
-app.get("/noticias/:categoria", async (req, res) => {
-  const categoria = req.params.categoria;
-
-  const rawInfoNews = await fetch(`${NEWS_URL}&languaje=es&q=${categoria}`);
-  const newsNews = await rawInfoNews.json();
-  console.log("noticias");
-  console.log(newsNews);
-
-
-  const rawInfoGNews = await fetch(`${GNEWS_URL}&lan=es&q=${categoria}`);
-  const newsGNews = await rawInfoGNews.json();
-  console.log("noticias espacio");
-  console.log(newsGNews);
-
-  
-
-  res.json(newsNews);
+app.get("/imagen", authorization.soloAdmin,async (req, res) => {
+    const rawInfo = await fetch(NASA_URL);
+    const {copyright, date, explanation, hdurl, title, url} =
+        await rawInfo.json();
+    res.json({
+        title,
+        explanation,
+        copyright,
+        date,
+        url,
+        hdurl,
+    });
 });
 
-app.get("/imagen", async (req, res) => {
-  /*
-      {
-          "copyright": "Christophe Vergnes",
-          "date": "2024-05-23",
-          "explanation": "Spiral galaxy NGC 3169 looks to be unraveling like a ball of cosmic yarn. It lies some 70 million light-years away, south of bright star Regulus toward the faint constellation Sextans. Wound up spiral arms are pulled out into sweeping tidal tails as NGC 3169 (left) and neighboring NGC 3166 interact gravitationally. Eventually the galaxies will merge into one, a common fate even for bright galaxies in the local universe. Drawn out stellar arcs and plumes are clear indications of the ongoing gravitational interactions across the deep and colorful galaxy group photo. The telescopic frame spans about 20 arc minutes or about 400,000 light-years at the group's estimated distance, and includes smaller, bluish NGC 3165 to the right. NGC 3169 is also known to shine across the spectrum from radio to X-rays, harboring an active galactic nucleus that is the site of a supermassive black hole.",
-          "hdurl": "https://apod.nasa.gov/apod/image/2405/N3169N3166Final.jpg",
-          "media_type": "image",
-          "service_version": "v1",
-          "title": "Unraveling NGC 3169",
-          "url": "https://apod.nasa.gov/apod/image/2405/N3169N3166Final1024.jpg"
-      }
-      */
-     
-  const rawInfo = await fetch(NASA_URL);
-  const { copyright, date, explanation, hdurl, title, url } =
-    await rawInfo.json();
-  res.json({
-    title,
-    explanation,
-    copyright,
-    date,
-    url,
-    hdurl,
-  });
+app.get("/clima/:lat/:long", authorization.soloAdmin,async (req, res) => {
+    const {lat, long} = req.params;
+    const rawInfo = await fetch(`${OPENWEATHERMAP_URL}&lat=${lat}&lon=${long}`);
+    const clima = await rawInfo.json();
+    res.json(clima);
 });
 
-app.get("/clima/:lat/:long", async (req, res) => {
-  const {lat, long} = req.params
-  const rawInfo = await fetch(`${OPENWEATHERMAP_URL}&lat=${lat}&lon=${long}`)
-  const clima =  await rawInfo.json();
-  res.json(clima);
+app.get("/moneda/:comparar", authorization.soloAdmin,async (req, res) => {
+    const comparar = req.params.comparar || "USD";
+    const rawInfo = await fetch(
+        `${FREECURRENCYEXCHANGE_URL}&base_currency=MXN&currencies=${comparar}`
+    );
+    const moneda = await rawInfo.json();
+    res.json(moneda);
 });
 
-app.get("/moneda/:comparar", async (req,res) => { 
-
-  const comparar = req.params.comparar || "USD";
-  const rawInfo = await fetch(`${FREECURRENCYEXCHANGE_URL}&base_currency=MXN&currencies=${comparar}`)
-  const moneda = await rawInfo.json();
-  res.json(moneda);
-
+app.get("/celebracion", authorization.soloAdmin,async (req, res) => {
+    const headers = {
+        method: "GET",
+        headers: {"X-Api-Key": HOLIDAY_API_KEY},
+    };
+    const rawInfo = await fetch(`${HOLIDAY_URL}?country=MX&year=2024`, headers);
+    const celebraciones = await rawInfo.json();
+    res.json(celebraciones.slice(0, 10));
 });
 
-app.get("/celebracion", async (req, res) => {
-  const headers = {
-    method: 'GET',
-  headers: {'X-Api-Key': HOLIDAY_API_KEY } 
-}
-  const rawInfo = await fetch(`${HOLIDAY_URL}?country=MX&year=2024`, headers);
-  const celebraciones = await rawInfo.json()
-  res.json(celebraciones.slice(0, 10));
-})
+app.get("/efemerides/:apiKey", authorization.soloAdmin,async (req, res) => {
+    const efemerides = await consultaEfemerides();
+    console.log(efemerides);
+    res.json({efemerides: efemerides});
+});
 
 app.listen(PORT, () =>
-  console.log(`El servidor está corriendo en http://localhost:${PORT}/`)
+    console.log(`El servidor está corriendo en http://localhost:${PORT}/`)
 );
