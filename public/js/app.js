@@ -1,11 +1,13 @@
 //Cantidad de noticias que se cargaran cada vez que se presione siguiente\
-let cantidadNoticias = 9;
+let cantidadNoticias = 8;
 let pageFinal = cantidadNoticias;
 let pageInicial = 0;
 let temaActual = "Tecnología";
+let festividadVisible = false;
+const urlApi = "http://localhost:3000";
 
 function imagenDelDia() {
-  fetch("http://localhost:3000/imagen/")
+  fetch(`${urlApi}/imagen/`)
     .then((response) => response.json())
     .then(({ title, explanation, copyright, date, url, hdurl }) => {
       const divImagen = document.getElementById("imagen");
@@ -33,7 +35,7 @@ function imagenDelDia() {
 
 let noticias = {
   fetchNoticias: function (categoria) {
-    fetch(`http://localhost:3000/noticias/${categoria}`)
+    fetch(`${urlApi}/noticias/${categoria}`)
       .then((response) => response.json())
       .then((data) => this.displayNoticias(data));
   },
@@ -117,8 +119,7 @@ function siguiente() {
 noticias.fetchNoticias(temaActual);
 imagenDelDia();
 
-window.addEventListener("load", () => {
-  let lon;
+let lon;
   let lat;
 
   let temperaturaValor = document.getElementById("temperatura-valor");
@@ -135,7 +136,7 @@ window.addEventListener("load", () => {
       lon = posicion.coords.longitude;
       lat = posicion.coords.latitude;
     
-      fetch(`http://localhost:300/clima/${lat}/${lon}`)
+      fetch(`${urlApi}/clima/${lat}/${lon}`)
         .then((response) => {
           return response.json();
         })
@@ -199,4 +200,56 @@ window.addEventListener("load", () => {
         });
     });
   }
-});
+
+function divisaDelDia() {
+  fetch(`${urlApi}/moneda/USD`).then(response => response.json()).then(({data}) => {
+    //const pesoText = document.getElementById("valor-peso")
+    console.log(data);
+    const cambio = data.USD
+    const monedaCambio = document.getElementById("moneda-cambio")
+    const valorCambio = document.getElementById("valor-cambio")
+    
+    monedaCambio.innerHTML = "USD"
+    valorCambio.innerHTML = `$${parseFloat(cambio).toFixed(2)}`;
+
+  })
+}
+
+divisaDelDia()
+
+const tableBody = document.getElementById("table-body");
+const countryCode = "MX";
+const year = 2024;
+
+getHolidayData(countryCode, year);
+
+async function getHolidayData(countryCode, year){
+    const url = "${urlApi}/celebracion"
+    let response = await fetch(url);
+    let result = await response.json();
+    console.log(result);
+    addRows(result);
+
+}
+
+function addRows(result){
+
+
+    for(let i=0; i < result.length; i++){
+        let row = tableBody.insertRow(i);
+        let dateCell = row.insertCell(0);
+        let dayCell = row.insertCell(1);
+        let nameCell = row.insertCell(2);
+
+        dateCell.innerHTML = result[i].date;
+        dayCell.innerHTML = result[i].day;
+        nameCell.innerHTML = result[i].name;
+    }
+}
+
+function mostrarFestividades() {
+  const festividades = document.getElementById("festividades");
+  !festividadVisible ? festividades.style.display = "block" : festividades.style.display = "none"
+  festividadVisible = !festividadVisible;
+  console.log(festividadVisible);
+}
