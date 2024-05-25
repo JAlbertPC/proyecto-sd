@@ -1,63 +1,89 @@
 import bcryptjs from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 
-export const usuarios = []
+export const usuarios = [
+  {
+    user: "test",
+    email: "test@test.com",
+    password: "$2a$05$h3Bx1.N1WH/r2dwGe0Nbnu5lSVvOVwWbo/BrpOg3WsPpyq8il0fly",
+  },
+];
 
-
-async function login(req,res){
+async function login(req, res) {
   console.log(req.body);
   const user = req.body.user;
   const password = req.body.password;
-  if(!user || !password){
-    return res.status(400).send({status:"Error",message:"Los campos están incompletos"})
+  if (!user || !password) {
+    return res
+      .status(400)
+      .send({ status: "Error", message: "Los campos están incompletos" });
   }
-  const usuarioAResvisar = usuarios.find(usuario => usuario.user === user);
-  if(!usuarioAResvisar){
-    return res.status(400).send({status:"Error",message:"Error durante login"})
+  const usuarioAResvisar = usuarios.find((usuario) => usuario.user === user);
+  if (!usuarioAResvisar) {
+    return res
+      .status(400)
+      .send({ status: "Error", message: "Error durante login" });
   }
-  const loginCorrecto = await bcryptjs.compare(password,usuarioAResvisar.password);
-  if(!loginCorrecto){
-    return res.status(400).send({status:"Error",message:"Error durante login"})
+  const loginCorrecto = await bcryptjs.compare(
+    password,
+    usuarioAResvisar.password
+  );
+  if (!loginCorrecto) {
+    return res
+      .status(400)
+      .send({ status: "Error", message: "Error durante login" });
   }
   const token = jsonwebtoken.sign(
-    {user:usuarioAResvisar.user},
+    { user: usuarioAResvisar.user },
     process.env.JWT_SECRET,
-    {expiresIn:process.env.JWT_EXPIRATION});
+    { expiresIn: process.env.JWT_EXPIRATION }
+  );
 
-    const prueba = new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000)
+  const prueba = new Date(
+    Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+  );
 
-    console.log(prueba)
-    const cookieOption = {
-
-      expires: prueba, 
-      path: "/"
-    }
-    res.cookie("jwt",token,cookieOption);
-    res.send({status:"ok",message:"Usuario loggeado",redirect:"/home"});
+  console.log(prueba);
+  const cookieOption = {
+    expires: prueba,
+    path: "/",
+  };
+  res.cookie("jwt", token, cookieOption);
+  res.send({ status: "ok", message: "Usuario loggeado", redirect: "/home" });
 }
 
-async function register(req,res){
+async function register(req, res) {
   const user = req.body.user;
   const password = req.body.password;
   const email = req.body.email;
-  if(!user || !password || !email){
-    return res.status(400).send({status:"Error",message:"Los campos están incompletos"})
+  if (!user || !password || !email) {
+    return res
+      .status(400)
+      .send({ status: "Error", message: "Los campos están incompletos" });
   }
-  const usuarioAResvisar = usuarios.find(usuario => usuario.user === user);
-  if(usuarioAResvisar){
-    return res.status(400).send({status:"Error",message:"Este usuario ya existe"})
+  const usuarioAResvisar = usuarios.find((usuario) => usuario.user === user);
+  if (usuarioAResvisar) {
+    return res
+      .status(400)
+      .send({ status: "Error", message: "Este usuario ya existe" });
   }
   const salt = await bcryptjs.genSalt(5);
-  const hashPassword = await bcryptjs.hash(password,salt);
-  const nuevoUsuario ={
-    user, email, password: hashPassword
-  }
+  const hashPassword = await bcryptjs.hash(password, salt);
+  const nuevoUsuario = {
+    user,
+    email,
+    password: hashPassword,
+  };
   usuarios.push(nuevoUsuario);
   console.log(usuarios);
-  return res.status(201).send({status:"ok",message:`Usuario ${nuevoUsuario.user} agregado`,redirect:"/"})
+  return res.status(201).send({
+    status: "ok",
+    message: `Usuario ${nuevoUsuario.user} agregado`,
+    redirect: "/",
+  });
 }
 
 export const methods = {
   login,
-  register
-}
+  register,
+};
