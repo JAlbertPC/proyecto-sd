@@ -42,7 +42,6 @@ let noticias = {
   },
   displayNoticias: function (data) {
     //se elimina todo si se ha seleccionado un tema nuevo}
-    console.log(data);
     if (pageInicial == 0) {
       document.querySelector(".container-noticias").textContent = "";
     }
@@ -133,7 +132,6 @@ let vientoVelocidad = document.getElementById("viento-velocidad");
 
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition((posicion) => {
-    console.log(posicion);
     lon = posicion.coords.longitude;
     lat = posicion.coords.latitude;
 
@@ -206,7 +204,7 @@ function divisaDelDia() {
     .then((response) => response.json())
     .then(({ data }) => {
       //const pesoText = document.getElementById("valor-peso")
-      console.log(data);
+
       const cambio = data.USD;
       const monedaCambio = document.getElementById("moneda-cambio");
       const valorCambio = document.getElementById("valor-cambio");
@@ -228,7 +226,7 @@ async function getHolidayData(countryCode, year) {
   const url = `${urlApi}/celebracion`;
   let response = await fetch(url);
   let result = await response.json();
-  console.log(result);
+
   addRows(result);
 }
 
@@ -255,7 +253,6 @@ function mostrarFestividades() {
     ? (festividades.style.display = "block")
     : (festividades.style.display = "none");
   festividadVisible = !festividadVisible;
-  console.log(festividadVisible);
 }
 
 function efemeridesDelDia() {
@@ -263,8 +260,7 @@ function efemeridesDelDia() {
     .then((response) => response.json())
     .then(({ efemerides }) => {
       //const pesoText = document.getElementById("valor-peso")
-      console.log("Efemerides");
-      console.log(efemerides);
+
       const efemeridesDiv = document.getElementById("efemerides");
       for (const efemeride of efemerides) {
         const text = document.createElement("p");
@@ -284,7 +280,6 @@ function mostrarEfemerides() {
     ? (efemerides.style.display = "block")
     : (efemerides.style.display = "none");
   efemeridesVisible = !efemeridesVisible;
-  console.log(efemeridesVisible);
 }
 
 efemeridesDelDia();
