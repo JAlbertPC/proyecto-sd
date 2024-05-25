@@ -114,7 +114,7 @@ nav span:hover{
     color: steelblue;
 }
 header input{
-    padding: 5px 10 px;
+    padding: 5px 10px;
     border: none;
     border: 2px solid #ccc;
     border-radius: 30px;
@@ -283,7 +283,9 @@ header button{
 }
 
 #div-ubicacion > img {
-    height: 1rem;
+    width: 4rem;
+    height: 1.3rem;
+    object-fit: cover;
 }
 
 .seccion-divisa {
