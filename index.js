@@ -13,15 +13,19 @@ const NEWS_URL = `${NEWS_API_URL}/everything?apiKey=${NEWS_API_KEY}`;
 
 const FREECURRENCYEXCHANGE_API_URL = process.env.FREECURRENCYEXCHANGE_API_URL;
 const FREECURRENCYEXCHANGE_API_KEY = process.env.FREECURRENCYEXCHANGE_API_KEY;
-const FREECURRENCYEXCHANGE = `${FREECURRENCYEXCHANGE_API_URL}?apikey=${FREECURRENCYEXCHANGE_API_KEY}`;
+const FREECURRENCYEXCHANGE_URL = `${FREECURRENCYEXCHANGE_API_URL}?apikey=${FREECURRENCYEXCHANGE_API_KEY}`;
 
 const GNEWS_API_URL = process.env.GNEWS_API_URL;
 const GNEWS_API_KEY = process.env.GNEWS_API_KEY;
-const GNEWS = `${GNEWS_API_URL}/?apikey=${GNEWS_API_KEY}`;
+const GNEWS_URL = `${GNEWS_API_URL}/search?apikey=${GNEWS_API_KEY}`;
 
 const OPENWEATHERMAP_API_URL = process.env.OPENWEATHERMAP_API_URL
 const OPENWEATHERMAP_API_KEY = process.env.OPENWEATHERMAP_API_KEY
 const OPENWEATHERMAP_URL = `${OPENWEATHERMAP_API_URL}/weather?lang=es&units=metric&appid=${OPENWEATHERMAP_API_KEY}`
+
+const HOLIDAY_API_URL  = process.env.HOLIDAY_API_URL
+const HOLIDAY_API_KEY = process.env.HOLIDAY_API_KEY
+const HOLIDAY_URL = `${HOLIDAY_API_URL}`
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -32,9 +36,20 @@ app.get("/", (req, res) => {
 app.get("/noticias/:categoria", async (req, res) => {
   const categoria = req.params.categoria;
 
-  const rawInfo = await fetch(`${NEWS_URL}&languaje=es&q=${categoria}`);
-  const news = await rawInfo.json();
-  res.json(news);
+  const rawInfoNews = await fetch(`${NEWS_URL}&languaje=es&q=${categoria}`);
+  const newsNews = await rawInfoNews.json();
+  console.log("noticias");
+  console.log(newsNews);
+
+
+  const rawInfoGNews = await fetch(`${GNEWS_URL}&lan=es&q=${categoria}`);
+  const newsGNews = await rawInfoGNews.json();
+  console.log("noticias espacio");
+  console.log(newsGNews);
+
+  
+
+  res.json(newsNews);
 });
 
 app.get("/imagen", async (req, res) => {
@@ -70,6 +85,25 @@ app.get("/clima/:lat/:long", async (req, res) => {
   const clima =  await rawInfo.json();
   res.json(clima);
 });
+
+app.get("/moneda/:comparar", async (req,res) => { 
+
+  const comparar = req.params.comparar || "USD";
+  const rawInfo = await fetch(`${FREECURRENCYEXCHANGE_URL}&base_currency=MXN&currencies=${comparar}`)
+  const moneda = await rawInfo.json();
+  res.json(moneda);
+
+});
+
+app.get("/celebracion", async (req, res) => {
+  const headers = {
+    method: 'GET',
+  headers: {'X-Api-Key': HOLIDAY_API_KEY } 
+}
+  const rawInfo = await fetch(`${HOLIDAY_URL}?country=MX&year=2024`, headers);
+  const celebraciones = await rawInfo.json()
+  res.json(celebraciones.slice(0, 10));
+})
 
 app.listen(PORT, () =>
   console.log(`El servidor está corriendo en http://localhost:${PORT}/`)
