@@ -64,7 +64,7 @@ body {
     width: 30%;
     background-color: white;
     border-radius: 2rem;
-    padding: 3rem;
+    padding: 2rem;
     transform: translate(0%, -50%);
     height: 90%;
 }
@@ -85,11 +85,12 @@ header{
     align-items: center;
     font-size: 20px;
     position: sticky;
-    top: 6.9rem;
+    top: 6.8rem;
     background-color: white;
 }
 nav{
     text-align: center;
+    position: relative;
 }
 nav span{
     display: inline-block;
@@ -100,6 +101,11 @@ nav span{
     cursor: pointer;
     border-radius: 30px;
 }
+
+.festivos {
+    background-color: aquamarine;
+}
+
 nav span:hover{
     color: steelblue;
 }
@@ -280,16 +286,36 @@ header button{
     top: 0;
     right: 0;
     background-color: forestgreen;
-    width: 10rem;
+    width: 8rem;
     border-radius: 1rem;
     height: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
 }
 
-.peso, .dolar {
+.peso, .cambio {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+    color: white
+}
+
+.peso > p{
+    margin: 0;
+}
+.cambio > p{
+    margin: 0;
+}
+
+.festividades {
+    position: absolute;
+    background-color: white;
+    display: none;
+    border-radius: 1rem;
+    margin-top: 1rem;
+    border: black;
+    border-style: solid;
+    border-width: 2px
 }
