@@ -31,12 +31,12 @@
           <h1>UADY NOTICIAS</h1>
           <div class="seccion-divisa">
             <div class="peso">
+              <p id="valor-peso">$1</p>
               <p>MXN</p>
-              <p id="valor-peso">$17</p>
             </div>
-            <div class="dolar">
-              <p>USD</p>
-              <p id="valor-dolar">$1</p>
+            <div class="cambio">
+              <p id="valor-cambio"></p>
+              <p id="moneda-cambio"></p>
             </div>
           </div>
         </div>
@@ -47,7 +47,19 @@
       <div class="noticias">
         <header>
           <nav>
-            <span class="cat">Enfemerides</span>
+            <span class="festivos" onclick="mostrarFestividades();">Días festivos</span>
+            <div class="festividades" id="festividades">
+              <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Día</th>
+                        <th>Nombre</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"> </tbody>
+            </table>
+            </div>
 
             <span class="cat" onclick="buscar('tecnologia')">Tecnología </span>
             <span class="cat" onclick="buscar('programación')"
