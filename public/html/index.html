@@ -47,19 +47,26 @@
       <div class="noticias">
         <header>
           <nav>
-            <span class="festivos" onclick="mostrarFestividades();">Días festivos</span>
+            <span class="festivos" onclick="mostrarFestividades();"
+              >Días festivos</span
+            >
             <div class="festividades" id="festividades">
               <table>
                 <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Día</th>
-                        <th>Nombre</th>
-                    </tr>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Día</th>
+                    <th>Nombre</th>
+                  </tr>
                 </thead>
-                <tbody id="table-body"> </tbody>
-            </table>
+                <tbody id="table-body"></tbody>
+              </table>
             </div>
+
+            <span class="efemerides" onclick="mostrarEfemerides();"
+              >Efemérides</span
+            >
+            <div class="efemerides-container" id="efemerides"></div>
 
             <span class="cat" onclick="buscar('tecnologia')">Tecnología </span>
             <span class="cat" onclick="buscar('programación')"

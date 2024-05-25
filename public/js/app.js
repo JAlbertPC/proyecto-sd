@@ -4,6 +4,7 @@ let pageFinal = cantidadNoticias;
 let pageInicial = 0;
 let temaActual = "Tecnología";
 let festividadVisible = false;
+let efemeridesVisible = false;
 const urlApi = "http://localhost:3000";
 
 function imagenDelDia() {
@@ -13,7 +14,7 @@ function imagenDelDia() {
       const divImagen = document.getElementById("imagen");
 
       const imagenDelDia = document.createElement("img");
-      imagenDelDia.src = url;
+      imagenDelDia.src = hdurl;
       imagenDelDia.alt = title;
 
       const divInformacion = document.createElement("div");
@@ -40,30 +41,32 @@ let noticias = {
       .then((data) => this.displayNoticias(data));
   },
   displayNoticias: function (data) {
-    //se elimina todo si se ha seleccionado un tema nuevo
+    //se elimina todo si se ha seleccionado un tema nuevo}
+    console.log(data);
     if (pageInicial == 0) {
       document.querySelector(".container-noticias").textContent = "";
     }
     //se carga la cantidad de noticias indicada en cantidadNoticias
-    for (i = pageInicial; i <= pageFinal; i++) {
-      const { title } = data.articles[i];
+    for (let i = pageInicial; i <= pageFinal; i++) {
+      const { title } = data.noticias[i];
       let h2 = document.createElement("h2");
       h2.textContent = title;
 
-      const { urlToImage } = data.articles[i];
+      const { image } = data.noticias[i];
       let img = document.createElement("img");
-      img.setAttribute("src", urlToImage);
+      img.setAttribute("src", image);
 
       let info_item = document.createElement("div");
       info_item.className = "info_item";
-      const { publishedAt } = data.articles[i];
+
+      const { publishedAt } = data.noticias[i];
       let fecha = document.createElement("span");
       let date = publishedAt;
       date = date.split("T")[0].split("-").reverse().join("-");
       fecha.className = "fecha";
       fecha.textContent = date;
 
-      const { name } = data.articles[i].source;
+      const { name } = data.noticias[i];
       let fuente = document.createElement("span");
       fuente.className = "fuente";
       fuente.textContent = name;
@@ -71,7 +74,7 @@ let noticias = {
       info_item.appendChild(fecha);
       info_item.appendChild(fuente);
 
-      const { url } = data.articles[i];
+      const { url } = data.noticias[i];
 
       let item = document.createElement("div");
       item.className = "item";
@@ -120,102 +123,100 @@ noticias.fetchNoticias(temaActual);
 imagenDelDia();
 
 let lon;
-  let lat;
+let lat;
 
-  let temperaturaValor = document.getElementById("temperatura-valor");
-  let temperaturaDescripcion = document.getElementById(
-    "temperatura-descripcion"
-  );
-  let ubicacion = document.getElementById("ubicacion");
-  let iconoAnimado = document.getElementById("icono-animado");
-  let vientoVelocidad = document.getElementById("viento-velocidad");
+let temperaturaValor = document.getElementById("temperatura-valor");
+let temperaturaDescripcion = document.getElementById("temperatura-descripcion");
+let ubicacion = document.getElementById("ubicacion");
+let iconoAnimado = document.getElementById("icono-animado");
+let vientoVelocidad = document.getElementById("viento-velocidad");
 
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((posicion) => {
-      console.log(posicion);
-      lon = posicion.coords.longitude;
-      lat = posicion.coords.latitude;
-    
-      fetch(`${urlApi}/clima/${lat}/${lon}`)
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition((posicion) => {
+    console.log(posicion);
+    lon = posicion.coords.longitude;
+    lat = posicion.coords.latitude;
 
-          let temp = Math.round(data.main.temp);
-          temperaturaValor.textContent = `${temp} °C`;
+    fetch(`${urlApi}/clima/${lat}/${lon}`)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        let temp = Math.round(data.main.temp);
+        temperaturaValor.textContent = `${temp} °C`;
 
-          let desc = data.weather[0].description;
-          temperaturaDescripcion.textContent = desc.toUpperCase();
+        let desc = data.weather[0].description;
+        temperaturaDescripcion.textContent = desc.toUpperCase();
 
-          ubicacion.textContent = data.name;
+        ubicacion.textContent = data.name;
 
-          vientoVelocidad.textContent = `${data.wind.speed} m/s`;
+        vientoVelocidad.textContent = `${data.wind.speed} m/s`;
 
-          //iconos estaticos
-          /*
+        //iconos estaticos
+        /*
                           console.log(data.weather[0].icon)
                           let iconCode = data.weather[0].icon
                           const urlIcon = `https://openweathermap.org/img/wn/${iconCode}.png`
                           console.log(urlIcon)
                           */
 
-          //para iconos dinámicos
-          switch (data.weather[0].main) {
-            case "Thunderstorm":
-              iconoAnimado.src = "images/animated/thunder.svg";
-              console.log("TORMENTA");
-              break;
-            case "Drizzle":
-              iconoAnimado.src = "images/animated/rainy-2.svg";
-              console.log("LLOVIZNA");
-              break;
-            case "Rain":
-              iconoAnimado.src = "images/animated/rainy-7.svg";
-              console.log("LLUVIA");
-              break;
-            case "Snow":
-              iconoAnimado.src = "images/animated/snowy-6.svg";
-              console.log("NIEVE");
-              break;
-            case "Clear":
-              iconoAnimado.src = "images/animated/day.svg";
-              console.log("LIMPIO");
-              break;
-            case "Atmosphere":
-              iconoAnimado.src = "images/animated/weather.svg";
-              console.log("ATMOSFERA");
-              break;
-            case "Clouds":
-              iconoAnimado.src = "images/animated/cloudy-day-1.svg";
-              console.log("NUBES");
-              break;
-            default:
-              iconoAnimado.src = "images/animated/cloudy-day-1.svg";
-              console.log("por defecto");
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
-  }
-
-function divisaDelDia() {
-  fetch(`${urlApi}/moneda/USD`).then(response => response.json()).then(({data}) => {
-    //const pesoText = document.getElementById("valor-peso")
-    console.log(data);
-    const cambio = data.USD
-    const monedaCambio = document.getElementById("moneda-cambio")
-    const valorCambio = document.getElementById("valor-cambio")
-    
-    monedaCambio.innerHTML = "USD"
-    valorCambio.innerHTML = `$${parseFloat(cambio).toFixed(2)}`;
-
-  })
+        //para iconos dinámicos
+        switch (data.weather[0].main) {
+          case "Thunderstorm":
+            iconoAnimado.src = "images/animated/thunder.svg";
+            console.log("TORMENTA");
+            break;
+          case "Drizzle":
+            iconoAnimado.src = "images/animated/rainy-2.svg";
+            console.log("LLOVIZNA");
+            break;
+          case "Rain":
+            iconoAnimado.src = "images/animated/rainy-7.svg";
+            console.log("LLUVIA");
+            break;
+          case "Snow":
+            iconoAnimado.src = "images/animated/snowy-6.svg";
+            console.log("NIEVE");
+            break;
+          case "Clear":
+            iconoAnimado.src = "images/animated/day.svg";
+            console.log("LIMPIO");
+            break;
+          case "Atmosphere":
+            iconoAnimado.src = "images/animated/weather.svg";
+            console.log("ATMOSFERA");
+            break;
+          case "Clouds":
+            iconoAnimado.src = "images/animated/cloudy-day-1.svg";
+            console.log("NUBES");
+            break;
+          default:
+            iconoAnimado.src = "images/animated/cloudy-day-1.svg";
+            console.log("por defecto");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
 }
 
-divisaDelDia()
+function divisaDelDia() {
+  fetch(`${urlApi}/moneda/USD`)
+    .then((response) => response.json())
+    .then(({ data }) => {
+      //const pesoText = document.getElementById("valor-peso")
+      console.log(data);
+      const cambio = data.USD;
+      const monedaCambio = document.getElementById("moneda-cambio");
+      const valorCambio = document.getElementById("valor-cambio");
+
+      monedaCambio.innerHTML = "USD";
+      valorCambio.innerHTML = `$${parseFloat(cambio).toFixed(2)}`;
+    });
+}
+
+divisaDelDia();
 
 const tableBody = document.getElementById("table-body");
 const countryCode = "MX";
@@ -223,33 +224,67 @@ const year = 2024;
 
 getHolidayData(countryCode, year);
 
-async function getHolidayData(countryCode, year){
-    const url = "${urlApi}/celebracion"
-    let response = await fetch(url);
-    let result = await response.json();
-    console.log(result);
-    addRows(result);
-
+async function getHolidayData(countryCode, year) {
+  const url = `${urlApi}/celebracion`;
+  let response = await fetch(url);
+  let result = await response.json();
+  console.log(result);
+  addRows(result);
 }
 
-function addRows(result){
+function addRows(result) {
+  for (let i = 0; i < result.length; i++) {
+    let row = tableBody.insertRow(i);
+    let dateCell = row.insertCell(0);
+    let dayCell = row.insertCell(1);
+    let nameCell = row.insertCell(2);
 
-
-    for(let i=0; i < result.length; i++){
-        let row = tableBody.insertRow(i);
-        let dateCell = row.insertCell(0);
-        let dayCell = row.insertCell(1);
-        let nameCell = row.insertCell(2);
-
-        dateCell.innerHTML = result[i].date;
-        dayCell.innerHTML = result[i].day;
-        nameCell.innerHTML = result[i].name;
-    }
+    dateCell.innerHTML = result[i].date;
+    dayCell.innerHTML = result[i].day;
+    nameCell.innerHTML = result[i].name;
+  }
 }
 
 function mostrarFestividades() {
+  const efemerides = document.getElementById("efemerides");
+  efemerides.style.display = "none";
+  efemeridesVisible = false;
+
   const festividades = document.getElementById("festividades");
-  !festividadVisible ? festividades.style.display = "block" : festividades.style.display = "none"
+  !festividadVisible
+    ? (festividades.style.display = "block")
+    : (festividades.style.display = "none");
   festividadVisible = !festividadVisible;
   console.log(festividadVisible);
 }
+
+function efemeridesDelDia() {
+  fetch(`${urlApi}/efemerides`)
+    .then((response) => response.json())
+    .then(({ efemerides }) => {
+      //const pesoText = document.getElementById("valor-peso")
+      console.log("Efemerides");
+      console.log(efemerides);
+      const efemeridesDiv = document.getElementById("efemerides");
+      for (const efemeride of efemerides) {
+        const text = document.createElement("p");
+        text.innerHTML = efemeride;
+        efemeridesDiv.appendChild(text);
+      }
+    });
+}
+
+function mostrarEfemerides() {
+  const festividades = document.getElementById("festividades");
+  festividades.style.display = "none";
+  festividadVisible = false;
+
+  const efemerides = document.getElementById("efemerides");
+  !efemeridesVisible
+    ? (efemerides.style.display = "block")
+    : (efemerides.style.display = "none");
+  efemeridesVisible = !efemeridesVisible;
+  console.log(efemeridesVisible);
+}
+
+efemeridesDelDia();
